@@ -1,0 +1,122 @@
+chrome() {
+  # -------- Shortcuts --------
+  typeset -A SITES
+  SITES=(
+    leetcode   "https://leetcode.com"
+    lc         "https://leetcode.com"
+    codeforces "https://codeforces.com"
+    cf         "https://codeforces.com"
+    github     "https://github.com/hetx19"
+    gh         "https://github.com/hetx19"
+    lms        "https://lmsug25.iiitkottayam.ac.in"
+
+    mail       "https://mail.google.com"
+    drive      "https://drive.google.com"
+  )
+
+  # -------- Groups --------
+  typeset -A GROUPS
+  GROUPS=(
+    dsa "lc cf"
+  )
+
+  # -------- Group → Profile mapping --------
+  typeset -A GROUP_PROFILES
+  GROUP_PROFILES=(
+    dsa "Profile 1"
+  )
+
+  # -------- Site → Profile mapping --------
+  typeset -A SITE_PROFILES
+  SITE_PROFILES=(
+    leetcode   "Profile 1"
+    lc         "Profile 1"
+    codeforces "Profile 1"
+    cf         "Profile 1"
+    lms        "Profile 3"
+    github     "Profile 2"
+    gh         "Profile 2"
+  )
+
+  INCOGNITO=false
+  PROFILE=""
+
+  # -------- List mode --------
+  if [[ "$1" == "--list" ]]; then
+    echo "🔗 Shortcuts:"
+    for k in ${(k)SITES}; do
+      printf "  %-12s → %s\n" "$k" "${SITES[$k]}"
+    done | sort
+
+    echo
+    echo "📦 Groups:"
+    for g in ${(k)GROUPS}; do
+      printf "  %-12s → %s\n" "$g" "${GROUPS[$g]}"
+    done | sort
+    return 0
+  fi
+
+  # -------- Parse flags --------
+  while [[ "$1" == -* ]]; do
+    case "$1" in
+      -p|--private)
+        INCOGNITO=true
+        shift
+        ;;
+      -P|--profile)
+        PROFILE="$2"
+        shift 2
+        ;;
+      *)
+        echo "❌ Unknown option: $1"
+        return 1
+        ;;
+    esac
+  done
+
+  [[ $# -eq 0 ]] && {
+    echo "Usage: chrome [-p] [-P \"Profile X\"] <sites|groups|urls>"
+    return 1
+  }
+
+  # -------- Collect URLs --------
+  urls=()
+
+  for item in "$@"; do
+    if [[ -n "${GROUPS[$item]}" ]]; then
+
+      # Auto-apply profile for group
+      [[ -z "$PROFILE" && -n "${GROUP_PROFILES[$item]}" ]] && \
+        PROFILE="${GROUP_PROFILES[$item]}"
+
+      for site in ${(s: :)GROUPS[$item]}; do
+        urls+=("${SITES[$site]}")
+      done
+
+    else
+      if [[ -n "${SITES[$item]}" ]]; then
+
+        # Auto-apply profile for site
+        [[ -z "$PROFILE" && -n "${SITE_PROFILES[$item]}" ]] && \
+          PROFILE="${SITE_PROFILES[$item]}"
+
+        urls+=("${SITES[$item]}")
+      else
+        [[ "$item" != http* ]] && item="https://$item"
+        urls+=("$item")
+      fi
+    fi
+  done
+
+  # -------- Deduplicate --------
+  urls=($(printf "%s\n" "${urls[@]}" | awk '!seen[$0]++'))
+
+  # -------- Build Chrome args --------
+  ARGS=()
+  [[ -n "$PROFILE" ]] && ARGS+=(--profile-directory="$PROFILE")
+  $INCOGNITO && ARGS+=(--incognito)
+
+  # -------- Launch Chrome --------
+  open -na "Google Chrome" --args "${ARGS[@]}" "${urls[@]}"
+}
+

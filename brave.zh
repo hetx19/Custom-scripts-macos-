@@ -1,0 +1,33 @@
+#!/bin/zsh
+
+brave() {
+  if [ -z "$1" ]; then
+    echo "Usage: brave [--private|-p] <site1> [site2 ...]"
+    return 1
+  fi
+
+  INCOGNITO=false
+  if [[ "$1" == "--private" || "$1" == "-p" ]]; then
+    INCOGNITO=true
+    shift
+  fi
+
+  if [ $# -eq 0 ]; then
+    echo "❌ Error: no websites provided"
+    return 1
+  fi
+
+  URLS=()
+  for site in "$@"; do
+    [[ "$site" != http* ]] && site="https://$site"
+    URLS+=("$site")
+  done
+
+  ARGS=()
+  $INCOGNITO && ARGS+=(--incognito)
+
+  open -na "Brave Browser" --args \
+    "${ARGS[@]}" \
+    "${URLS[@]}"
+}
+

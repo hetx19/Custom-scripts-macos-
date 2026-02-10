@@ -1,0 +1,83 @@
+#!/bin/zsh
+
+mkcpp() {
+  if [ -z "$1" ]; then
+    echo "Usage: mkcpp <folder_name>"
+    return 1
+  fi
+
+  DIR="$1"
+
+  # If a file (not directory) already exists
+  if [ -e "$DIR" ] && [ ! -d "$DIR" ]; then
+    echo "❌ Error: '$DIR' exists and is a file, not a directory"
+    return 1
+  fi
+
+  # If directory already exists
+  if [ -d "$DIR" ]; then
+    echo "❌ Error: directory '$DIR' already exists"
+    return 1
+  fi
+
+  mkdir -p "$DIR/.vscode"
+
+  cat > "$DIR/$DIR.cpp" <<EOF
+#include <bits/stdc++.h>
+using namespace std;
+
+int main() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+
+    return 0;
+}
+EOF
+
+  touch "$DIR/input.txt"
+  touch "$DIR/output.txt"
+  touch "$DIR/time.txt"
+
+  cat > "$DIR/.vscode/tasks.json" <<'EOF'
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "compile",
+      "type": "shell",
+      "command": "g++",
+      "args": [
+        "-std=gnu++17",
+        "-O2",
+        "${file}",
+        "-o",
+        "${fileBasenameNoExtension}"
+      ],
+      "group": "build"
+    },
+    {
+      "label": "compile and run",
+      "type": "shell",
+      "command": "sh",
+      "args": [
+        "-c",
+        "g++ -std=gnu++17 -O2 \"${file}\" -o \"${fileBasenameNoExtension}\" && start=$(date +%s%N); ./\"${fileBasenameNoExtension}\" < input.txt > output.txt; end=$(date +%s%N); echo \"Runtime: $(((end-start)/1000000)) ms | $((end-start)) ns\" > time.txt"
+      ],
+      "group": {
+        "kind": "build",
+        "isDefault": true
+      }
+    }
+  ]
+}
+EOF
+
+  echo "✅ C++ project '$DIR' created successfully 🚀"
+  code -r "$DIR" -g \
+    "$DIR/$DIR.cpp" \
+    "$DIR/input.txt" \
+    "$DIR/output.txt" \
+    "$DIR/time.txt"
+
+}
+
