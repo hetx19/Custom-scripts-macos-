@@ -2,13 +2,15 @@ chrome() {
   # -------- Shortcuts --------
   typeset -A SITES
   SITES=(
-    leetcode   "https://leetcode.com"
-    lc         "https://leetcode.com"
-    codeforces "https://codeforces.com"
-    cf         "https://codeforces.com"
+    leetcode   "https://leetcode.com/u/harshalx19"
+    lc         "https://leetcode.com/u/harshalx19"
+    codeforces "https://codeforces.com/profile/Harshalx19"
+    cf         "https://codeforces.com/profile/Harshalx19"
     github     "https://github.com/hetx19"
     gh         "https://github.com/hetx19"
     lms        "https://lmsug25.iiitkottayam.ac.in"
+    vercel     "https://vercel.com"
+    netlify    "https://www.netlify.com"
 
     mail       "https://mail.google.com"
     drive      "https://drive.google.com"
@@ -36,6 +38,8 @@ chrome() {
     lms        "Profile 3"
     github     "Profile 2"
     gh         "Profile 2"
+    vercel     "Profile 2"
+    netlify    "Profile 2"
   )
 
   INCOGNITO=false
