@@ -2,12 +2,15 @@
 
 mkcpp() {
   if [ -z "$1" ]; then
-    echo "Usage: mkcpptest <folder_name>"
+    echo "Usage: mkcpp <folder_name>"
     return 1
   fi
 
   DIR="$1"
 
+  # ==============================
+  # 📁 Safety Checks
+  # ==============================
   if [ -e "$DIR" ] && [ ! -d "$DIR" ]; then
     echo "❌ Error: '$DIR' exists and is a file"
     return 1
@@ -18,10 +21,10 @@ mkcpp() {
     return 1
   fi
 
-  mkdir "$DIR"
+  mkdir -p "$DIR" || return 1
 
   # ==============================
-  # 🔥 CF-READY C++ TEMPLATE
+  # 🔥 C++ TEMPLATE
   # ==============================
   cat > "$DIR/$DIR.cpp" <<EOF
 #include <bits/stdc++.h>
@@ -38,12 +41,15 @@ int main() {
 }
 EOF
 
+  # ==============================
+  # 📄 Required Files
+  # ==============================
   touch "$DIR/input.txt"
   touch "$DIR/output.txt"
   touch "$DIR/time.txt"
 
   # ==============================
-  # 🏗 MAKEFILE (Release + Debug + Sanitizer)
+  # 🏗 MAKEFILE
   # ==============================
   cat > "$DIR/Makefile" <<EOF
 CXX = g++
@@ -61,9 +67,9 @@ debug:
 	\$(CXX) \$(DEBUG_FLAGS) \$(SRC) -o \$(TARGET)
 
 run: release
-	@start=\$$(python3 -c 'import time; print(time.time_ns())'); \\
+	@start=\$$(date +%s%N); \\
 	./\$(TARGET) < input.txt > output.txt; \\
-	end=\$$(python3 -c 'import time; print(time.time_ns())'); \\
+	end=\$$(date +%s%N); \\
 	echo "Runtime: \$\$(((end-start)/1000000)) ms | \$\$((end-start)) ns" > time.txt; \\
 	cat time.txt
 
@@ -75,7 +81,7 @@ clean:
 EOF
 
   # ==============================
-  # 🧠 STRESS TEST SCRIPT (.zh)
+  # 🧠 STRESS SCRIPT
   # ==============================
   cat > "$DIR/stress.zh" <<EOF
 #!/bin/zsh
@@ -93,14 +99,19 @@ EOF
   echo "🏆 Candidate Master C++ project '$DIR' created"
 
   # ==============================
+  # 📂 Enter Directory
+  # ==============================
+  cd "$DIR" || return 1
+
+  # ==============================
   # 🖥 PERFECT WINDOW LAYOUT
   # ==============================
-  nvim "$DIR/$DIR.cpp" \
-    -c "vsplit $DIR/input.txt" \
+  nvim "$DIR.cpp" \
+    -c "set splitright splitbelow" \
+    -c "vsplit input.txt" \
     -c "wincmd l" \
-    -c "split $DIR/output.txt" \
-    -c "wincmd j" \
-    -c "split $DIR/time.txt" \
+    -c "split output.txt" \
+    -c "split time.txt" \
     -c "wincmd h" \
     -c "vertical resize 100"
 }
