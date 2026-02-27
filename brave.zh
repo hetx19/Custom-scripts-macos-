@@ -13,7 +13,7 @@ brave() {
   # -------- Groups --------
   typeset -A GROUPS
   GROUPS=(
-    dsa "tuf yt_dsa"
+    dsa "yt_dsa tuf"
   )
 
   PRIVATE=false
