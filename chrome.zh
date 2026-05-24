@@ -9,6 +9,7 @@ chrome() {
     gfg        "https://geeksforgeeks.org"
     github     "https://github.com/hetx19"
     gh         "https://github.com/hetx19"
+    linkedin   "https://www.linkedin.com/in/harshal-savaliya/"
     lms        "https://lmsug25.iiitkottayam.ac.in"
     vercel     "https://vercel.com"
     netlify    "https://www.netlify.com"
@@ -42,6 +43,7 @@ chrome() {
     gh         "Profile 2"
     vercel     "Profile 2"
     netlify    "Profile 2"
+    linkedin   "Profile 2"
   )
 
   INCOGNITO=false

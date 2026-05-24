@@ -51,7 +51,7 @@ EOF
   # ==============================
   # 🏗 MAKEFILE
   # ==============================
-  cat > "$DIR/Makefile" <<EOF
+cat > "$DIR/Makefile" <<EOF
 CXX = g++
 RELEASE_FLAGS = -std=gnu++17 -O2 -Wall -Wextra
 DEBUG_FLAGS = -std=gnu++17 -O0 -g -DLOCAL -fsanitize=address,undefined
