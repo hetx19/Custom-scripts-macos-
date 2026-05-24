@@ -78,7 +78,7 @@ EOF
     {
       "label": "compile and run",
       "type": "shell",
-      "command": "g++ -std=c++17 -o ${fileDirname}/${fileBasenameNoExtension} ${file} && ${fileDirname}/${fileBasenameNoExtension} < ${workspaceFolder}/input.txt > ${workspaceFolder}/output.txt",
+      "command": "g++ -std=c++17 -o ${fileDirname}/${fileBasenameNoExtension} ${file} && START=$(gdate +%s%N 2>/dev/null || date +%s%N) && ${fileDirname}/${fileBasenameNoExtension} < ${workspaceFolder}/input.txt > ${workspaceFolder}/output.txt && END=$(gdate +%s%N 2>/dev/null || date +%s%N) && NS=$((END-START)) && MS=$((NS/1000000)) && echo \"Runtime: ${MS} ms | ${NS} ns\" > ${workspaceFolder}/time.txt",
       "group": {
         "kind": "build",
         "isDefault": true
@@ -89,18 +89,6 @@ EOF
 EOF
 
   echo "🏆 Antigravity C++ project '$DIR' created successfully!"
-  echo ""
-  echo "📁 Project structure:"
-  echo "  ├── $DIR.cpp      (main source)"
-  echo "  ├── input.txt     (input file)"
-  echo "  ├── output.txt    (output file)"
-  echo "  ├── time.txt      (execution time)"
-  echo "  └── .vscode/"
-  echo "      └── tasks.json (Antigravity tasks)"
-  echo ""
-  echo "🚀 In Antigravity:"
-  echo "  Ctrl+Shift+B      # run default task (compile and run)"
-  echo "  Or select 'compile' task for just compilation"
 
   # ==============================
   # 📂 Enter Directory
