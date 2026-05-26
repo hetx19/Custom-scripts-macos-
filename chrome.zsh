@@ -13,6 +13,7 @@ chrome() {
     lms        "https://lmsug25.iiitkottayam.ac.in"
     vercel     "https://vercel.com"
     netlify    "https://www.netlify.com"
+    udemy      "https://www.udemy.com"
 
     mail       "https://mail.google.com"
     drive      "https://drive.google.com"
@@ -28,6 +29,7 @@ chrome() {
   typeset -A GROUP_PROFILES
   GROUP_PROFILES=(
     dsa "Profile 1"
+    udemy "Profile 2"
   )
 
   # -------- Site → Profile mapping --------
