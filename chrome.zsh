@@ -29,7 +29,6 @@ chrome() {
   typeset -A GROUP_PROFILES
   GROUP_PROFILES=(
     dsa "Profile 1"
-    udemy "Profile 2"
   )
 
   # -------- Site → Profile mapping --------
@@ -46,6 +45,7 @@ chrome() {
     vercel     "Profile 2"
     netlify    "Profile 2"
     linkedin   "Profile 2"
+    udemy      "Profile 2"
   )
 
   INCOGNITO=false
